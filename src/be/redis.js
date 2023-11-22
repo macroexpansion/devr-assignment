@@ -78,3 +78,29 @@ export const readPopuStream = async () => {
     };
   });
 };
+
+export const handlePopuStreamUpdate = async (callback) => {
+  const client = redis.duplicate();
+  while (true) {
+    const results = await client.xread("block", 0, "STREAMS", POPU_STREAM, "$");
+    const [key, messages] = results[0];
+
+    messages.forEach((e) => {
+      const flatData = e[1];
+      const entries = [];
+      for (let i = 0; i < flatData.length; i = i + 2) {
+        if (flatData[i] == "state_name") {
+          entries.push(["name", flatData[i + 1]]);
+        } else {
+          entries.push(["timestamp", flatData[i]]);
+          entries.push(["value", +flatData[i + 1]]);
+        }
+      }
+      const obj = Object.fromEntries(entries);
+      callback(obj);
+    });
+  }
+  await client.quit();
+};
+
+const loop = async (flag, client, callback) => {};

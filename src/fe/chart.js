@@ -44,7 +44,7 @@ export const createChart = (data) => {
   // Compute the structure using the average value (since this
   // orientation will be preserved using resquarify across the
   // entire animation).
-  const root = treemap(
+  let root = treemap(
     d3
       .hierarchy(data.group)
       .sum((d) => (Array.isArray(d.values) ? d3.sum(d.values) : 0))
@@ -165,6 +165,53 @@ export const createChart = (data) => {
   return Object.assign(svg.node(), {
     update(index, duration) {
       box
+        .transition()
+        .duration(duration)
+        .attr("opacity", ({ i }) => (i >= index ? 1 : 0));
+
+      leaf
+        .data(layout(index))
+        .transition()
+        .duration(duration)
+        .ease(d3.easeLinear)
+        .attr("transform", (d) => `translate(${d.x0},${d.y0})`)
+        .call((leaf) =>
+          leaf
+            .select("rect")
+            .attr("width", (d) => d.x1 - d.x0)
+            .attr("height", (d) => d.y1 - d.y0),
+        )
+        .call((leaf) =>
+          leaf.select("text tspan:last-child").tween("text", function (d) {
+            const i = d3.interpolate(parseNumber(this.textContent), d.value);
+            return function (t) {
+              this.textContent = formatNumber(i(t));
+            };
+          }),
+        );
+    },
+    update2(index, duration, data, update) {
+      const max = d3.max(
+        data.keys,
+        (d, i) => d3.hierarchy(data.group).sum((d) => d.values[i]).value,
+      );
+
+      root = treemap(
+        d3
+          .hierarchy(data.group)
+          .sum((d) => (Array.isArray(d.values) ? d3.sum(d.values) : 0))
+          .sort((a, b) => b.value - a.value),
+      );
+
+      box
+        .data(
+          data.keys
+            .map((key, i) => {
+              const value = root.sum((d) => d.values[i]).value;
+              return { key, value, i, k: Math.sqrt(value / max) };
+            })
+            .reverse(),
+        )
         .transition()
         .duration(duration)
         .attr("opacity", ({ i }) => (i >= index ? 1 : 0));

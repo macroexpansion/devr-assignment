@@ -1,19 +1,23 @@
 import * as d3 from "d3";
 
-import { getData, createChart } from "./src/fe";
+import { SSE, getData, createChart } from "./src/fe";
 import { delay } from "./src/utils";
 
 const main = async () => {
-  const data = await getData();
-
-  const chart = createChart(data);
+  let data = await getData();
+  let chart = createChart(data);
   app.append(chart);
 
+  SSE((e) => {
+    console.log(e);
+    const index = data.keys.indexOf(+e.timestamp);
+    getData().then((data) => {
+      chart.update2(index, 2500, data, e);
+    });
+  });
+
   const indexes = d3.range(data.keys.length);
-  for (const index of indexes) {
-    await delay(500);
-    chart.update(index, 2500);
-  }
+  chart.update(20, 50);
 };
 
 main().then(() => {
