@@ -46,7 +46,7 @@ pnpm dev:fe
 # Open a new terminal
 pnpm update-data
 ```
-- After this command, we can see the **Kansas** state rectangle is growing bigger.
+- After this command, we can see the **Kansas** state rectangle is growing bigger in browser.
 
 ## Note
 - To reset data, just run stop the Redis container and start it again
