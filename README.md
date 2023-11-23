@@ -20,6 +20,9 @@ The app has 3 parts:
     - notify the front-end when new data has been updated in the Redis stream
 - [Front-end](./src/fe): request data from back-end and render Treemap
 
+## Demo
+- I have recorded a demo video: [demo.mov](./demo.mov)
+
 ## Usage
 - First, start the Redis instance using `docker-compose`
 ```bash
