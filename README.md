@@ -2,7 +2,7 @@
 
 ## Prerequisite
 - Node.js v16.16.0
-- pnpm v8.8.0
+- [pnpm](https://pnpm.io/installation) v8.8.0
 - Docker Engine v24.0.6
 - Docker Desktop v4.25.2
 
@@ -41,9 +41,17 @@ pnpm dev:fe
 - Then, open `http://localhost:8080` in browser, we can see the Treemap is being rendered
 
 - Finally, we can update data in Redis Stream and the Treemap will be rendered in real-time. The parameters to update data is defined in [./src/script/update.js](./src/script/update.js), we can change it there
-- For example, by default the command will update population of state Kansas in 1990 to 10 000 000
+- For example, by default the command will update population of state **Kansas** in **1990** to **10 000 000**
 ```bash
 # Open a new terminal
 pnpm update-data
 ```
-- After this command, we can see the Kansas state rectangle is growing bigger.
+- After this command, we can see the **Kansas** state rectangle is growing bigger.
+
+## Note
+- To reset data, just run stop the Redis container and start it again
+```bash
+docker compose down
+# then
+docker compose up -d
+```
