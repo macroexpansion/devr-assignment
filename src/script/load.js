@@ -1,5 +1,8 @@
 import fs from "fs";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 import * as d3 from "d3";
 
 import {
@@ -13,8 +16,8 @@ import {
 import { timestamps } from "../common.js";
 
 const readData = async () => {
-  const regionsCsv = fs.readFileSync("./data/region.csv", "utf8");
-  const popuTsv = fs.readFileSync("./data/popu.tsv", "utf8");
+  const regionsCsv = fs.readFileSync(process.env.REGION_FILE, "utf8");
+  const popuTsv = fs.readFileSync(process.env.POPU_FILE, "utf8");
   const regions = d3.csvParse(regionsCsv);
   const states = d3
     .tsvParse(popuTsv)

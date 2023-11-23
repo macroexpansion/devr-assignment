@@ -17,7 +17,9 @@ const main = async () => {
   });
 
   const indexes = d3.range(data.keys.length);
-  chart.update(20, 50);
+  for (const index of indexes) {
+    chart.update(index, 2500);
+  }
 };
 
 main().then(() => {

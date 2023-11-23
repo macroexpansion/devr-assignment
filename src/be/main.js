@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -18,7 +21,7 @@ const main = async () => {
   app.get("/data", getDataHandler);
   app.get("/event", eventHandler);
 
-  const port = 8081;
+  const port = process.env.VITE_BACKEND_PORT;
   app.listen(port, () => {
     console.log(`Listen on port ${port}`);
   });
